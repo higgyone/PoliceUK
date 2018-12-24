@@ -28,6 +28,9 @@
     <Compile Include="CrimeAtLoc.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DateIterator.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PoliceUK.py" />
   </ItemGroup>
   <ItemGroup>

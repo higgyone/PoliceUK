@@ -37,7 +37,7 @@ class CrimeAtLoc(object):
         "Street ID: {}\n" \
         "Street Name: {}\n" \
         "Status category: {}\n" \
-        "status date: {}\n" \
+        "status date: {}" \
         .format(self.category, self.location_type, self.location_subtype, self.persistent_id,
                 self.id, self.month, self.location_lat, self.location_lng, self.location_street_id,
                 self.location_street_name, self.status_category, self.status_date)
@@ -58,8 +58,9 @@ class CrimeAtLoc(object):
             c.location_street_id = d["location"]["street"]["id"]
             c.location_street_name = d["location"]["street"]["name"]
             c.context = d["context"]
-            c.status_category = d["outcome_status"]["category"]
-            c.status_date = d["outcome_status"]["date"]
+            if d["outcome_status"] is not None:
+                c.status_category = d["outcome_status"]["category"]
+                c.status_date = d["outcome_status"]["date"]
             c.id = d["id"]
             c.location_subtype = d["location_subtype"]
             c.month = d["month"]

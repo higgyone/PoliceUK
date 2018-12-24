@@ -1,7 +1,8 @@
 import requests
 import json
 from CrimeAtLoc import CrimeAtLoc
-import Area
+import Area #use this to set your latitude and longitude
+from DateIterator import DateIterator
 
 
 def date_hook(r, *args, **kwargs):
@@ -13,19 +14,18 @@ def print_url(r, *args, **kwargs):
 
 atLocUrlBase = "https://data.police.uk/api/crimes-at-location"
 
+for dateStr in DateIterator():
+    print(dateStr)
+    payload = {'date' : dateStr, 'lat' : Area.Latitude, 'lng' : Area.Longitude}
 
-date = '2018-10'
-payload = {'date' : date, 'lat' : Area.Latitude, 'lng' : Area.Longitude}
+    r = requests.get(atLocUrlBase, params=payload, hooks = {'response' : [print_url, date_hook]})
 
-r = requests.get(atLocUrlBase, params=payload, hooks = {'response' : [print_url, date_hook]})
+    crimes = json.loads(r.text)
 
-crimes = json.loads(r.text)
+    l = CrimeAtLoc.ParseCrimeAtLoc(crimes)
 
-l = CrimeAtLoc.ParseCrimeAtLoc(crimes)
-
-for i, val in enumerate(l):
-    print(type(val))
-    print(val)
+    for i, val in enumerate(l):
+        print(val)
 
 #print(r.url)
 #print(r.status_code)
