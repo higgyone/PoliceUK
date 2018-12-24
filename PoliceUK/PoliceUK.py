@@ -3,6 +3,7 @@ from CrimeAtLoc import CrimeAtLoc
 import Area #use this to set your latitude and longitude
 from DateIterator import DateIterator
 from CrimeRequest import CrimeRequest
+from StackPlot import StackPlot
 
 lCrimes = []
 
@@ -43,3 +44,5 @@ for dateStr in DateIterator():
         print('*' * 30)
 
     print('*' * 30)
+
+StackPlot(lCrimes)
