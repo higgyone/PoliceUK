@@ -28,10 +28,16 @@
     <Compile Include="CrimeAtLoc.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CrimeRequest.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DateIterator.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PoliceUK.py" />
+    <Compile Include="StackPlot.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.7" />
