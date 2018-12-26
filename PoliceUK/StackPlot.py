@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from DateIterator import DateIterator
+import numpy as np; np.random.seed(1)
+from operator import attrgetter
+from itertools import groupby
 
 class StackPlot(object):
     """Plot the crimes"""
@@ -11,6 +14,11 @@ class StackPlot(object):
         self.dates = []
         self.crimeCount = []
         self.plotData()
+        self.line = None
+        self.fig = None
+        self.ax = None
+        self.annot = None
+        self.names = np.array(list("ABCDEFGHIJKLMNO"))
 
     def plotData(self):
         self.getXDates()
@@ -19,8 +27,13 @@ class StackPlot(object):
         for val in self.dates:
             self.crimeCount.append(self.count(self.crimes, lambda d: d.month == val))
         
-        plt.plot(self.dates, self.crimeCount, 'bo-', label='All crime count')
-        plt.legend()
+
+        self.fig, self.ax = plt.subplots()
+        self.line, = plt.plot(self.dates, self.crimeCount, 'bo-', label='All crime count')
+        self.annot = plt.annotate("", xy=(0,0), xytext=(20,20),textcoords="offset points",
+                    bbox=dict(boxstyle="round", fc="w"),
+                    arrowprops=dict(arrowstyle="->"))
+        self.annot.set_visible(False)
         #plt.stackplot(self.dates, [self.crimeCount], colors=['#377EB8'])
 
        # plt.legend([mpatches.Patch(color='#377EB8')], ['All Crime Count'])
@@ -28,8 +41,46 @@ class StackPlot(object):
         plt.xlabel("Date")
         plt.ylabel("Counts")
 
+        self.fig.canvas.mpl_connect("motion_notify_event", self.hover)
+
         plt.show()
 
+    def update_annot(self, ind):
+        x,y = self.line.get_data()
+        self.annot.xy = (x[ind["ind"][0]], y[ind["ind"][0]])
+        #text = "{}, {}".format(" ".join(list(map(str,ind["ind"]))), 
+        #                       " ".join([self.names[n] for n in ind["ind"]]))
+        text = self.getMatches(self.annot.xy[0])
+        self.annot.set_text(text)
+        self.annot.get_bbox_patch().set_alpha(0.4)
+
+    def hover(self, event):
+        vis = self.annot.get_visible()
+        if event.inaxes == self.ax:
+            cont, ind = self.line.contains(event)
+            if cont:
+                self.update_annot(ind)
+                self.annot.set_visible(True)
+                self.fig.canvas.draw_idle()
+            else:
+                if vis:
+                    self.annot.set_visible(False)
+                    self.fig.canvas.draw_idle()
+
+
+    def getMatches(self, prop):
+        monthData = list(filter(lambda x: x.month == prop, self.crimes))
+        text = []
+        t = "None"
+
+        if monthData:
+            for d in monthData[:-1]:
+                text.append(d.getBasicDetails())
+                text.append("\n")        
+            text.append(monthData[-1].getBasicDetails())
+            t = ''.join(text)
+
+        return t
 
     def count(self, seq, pred):
         return sum(1 for v in seq if pred(v))

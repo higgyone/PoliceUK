@@ -19,9 +19,14 @@ class CrimeAtLoc(object):
         self.status_category = None
         self.status_date = None
 
-    def string(self):
-        return "Category: {}\n" \
-        "Location type: {}".format(self.category, self.location_type)
+    def getBasicDetails(self):
+        text = "Category: {}\n" \
+        "Date: {}\n" \
+        "Status: {}\n" \
+        "On: {}" \
+        .format(self.category, self.month, self.status_category, self.status_date)
+
+        return text
 
 
 
