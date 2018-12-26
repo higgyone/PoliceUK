@@ -1,10 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 from DateIterator import DateIterator
-import numpy as np; np.random.seed(1)
-from operator import attrgetter
-from itertools import groupby
 
 class StackPlot(object):
     """Plot the crimes"""
@@ -18,15 +13,13 @@ class StackPlot(object):
         self.fig = None
         self.ax = None
         self.annot = None
-        self.names = np.array(list("ABCDEFGHIJKLMNO"))
 
     def plotData(self):
         self.getXDates()
         place = self.crimes[0].location_street_name
 
         for val in self.dates:
-            self.crimeCount.append(self.count(self.crimes, lambda d: d.month == val))
-        
+            self.crimeCount.append(self.count(self.crimes, lambda d: d.month == val))       
 
         self.fig, self.ax = plt.subplots()
         self.line, = plt.plot(self.dates, self.crimeCount, 'bo-', label='All crime count')
@@ -34,9 +27,7 @@ class StackPlot(object):
                     bbox=dict(boxstyle="round", fc="w"),
                     arrowprops=dict(arrowstyle="->"))
         self.annot.set_visible(False)
-        #plt.stackplot(self.dates, [self.crimeCount], colors=['#377EB8'])
 
-       # plt.legend([mpatches.Patch(color='#377EB8')], ['All Crime Count'])
         plt.title("All crimes per month " + place)
         plt.xlabel("Date")
         plt.ylabel("Counts")
@@ -48,8 +39,6 @@ class StackPlot(object):
     def update_annot(self, ind):
         x,y = self.line.get_data()
         self.annot.xy = (x[ind["ind"][0]], y[ind["ind"][0]])
-        #text = "{}, {}".format(" ".join(list(map(str,ind["ind"]))), 
-        #                       " ".join([self.names[n] for n in ind["ind"]]))
         text = self.getMatches(self.annot.xy[0])
         self.annot.set_text(text)
         self.annot.get_bbox_patch().set_alpha(0.4)

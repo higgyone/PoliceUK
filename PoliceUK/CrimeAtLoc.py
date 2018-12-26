@@ -1,5 +1,3 @@
-import json
-import collections
 
 class CrimeAtLoc(object):
     """description of class"""

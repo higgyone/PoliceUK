@@ -1,5 +1,4 @@
 import requests
-import json
 
 class CrimeRequest(object):
     """description of class"""
